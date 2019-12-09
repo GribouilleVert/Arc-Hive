@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpunit bootstrap="vendor/autoload.php"
+         cacheResult="false"
+         colors="true">
+    <testsuites>
+        <testsuite name="Application">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>src/TurboPancake</directory>
+            <directory>src/ArcHive</directory>
+        </whitelist>
+    </filter>
+</phpunit>

@@ -1,0 +1,53 @@
+{
+    "name": "vasco/arc-hive",
+    "type": "project",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Vasco Compain",
+            "email": "vasco.gribouille@gmail.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Florian Houssin",
+            "email": "florian.houssin02@gmail.com",
+            "role": "Manager"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "TurboPancake\\": "src/TurboPancake",
+            "ArdHive\\": "src/ArcHuve",
+            "Tests\\": "tests"
+        }
+    },
+    "require": {
+        "guzzlehttp/psr7": "^1.0",
+        "http-interop/response-sender": "dev-master",
+        "zendframework/zend-expressive-fastroute": "^3.0",
+        "twig/twig": "3.x-dev",
+        "php-di/php-di": "dev-master",
+        "pagerfanta/pagerfanta": "^1.0@dev",
+        "psr/http-server-middleware": "^1.0@dev",
+        "middlewares/whoops": "^1.0",
+        "sensiolabs/security-checker": "^6.0@dev",
+        "intervention/image": "^2.4@dev",
+        "phpmailer/phpmailer": "dev-master",
+        "ext-pdo": "*",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-intl": "*",
+        "ext-fileinfo": "*",
+        "ext-gd": "*",
+        "ext-imagick": "*",
+        "php": "^7.3"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.0@dev",
+        "robmorgan/phinx": "dev-master",
+        "fzaninotto/faker": "^1.9@dev",
+        "symfony/var-dumper": "^5.0@dev",
+        "phpunit/phpunit": "8.1.0"
+    }
+}
