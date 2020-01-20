@@ -20,7 +20,10 @@
             "TurboPancake\\": "src/TurboPancake",
             "ArdHive\\": "src/ArcHuve",
             "Tests\\": "tests"
-        }
+        },
+        "files": [
+            "src/ArcHive/functions.php"
+        ]
     },
     "require": {
         "guzzlehttp/psr7": "^1.0",
