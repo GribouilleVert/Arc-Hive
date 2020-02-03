@@ -18,7 +18,7 @@
     "autoload": {
         "psr-4": {
             "TurboPancake\\": "src/TurboPancake",
-            "ArdHive\\": "src/ArcHuve",
+            "ArcHive\\": "src/ArcHive",
             "Tests\\": "tests"
         },
         "files": [

@@ -1,10 +1,11 @@
 <?php
+
 chdir(dirname(__DIR__));
 
 require 'vendor/autoload.php';
 
 $modules = [
-
+    ArcHive\Api\ApiModule::class
 ];
 
 $app = new TurboPancake\App('config/config.php', $modules);
@@ -14,7 +15,7 @@ $app
     ->trough(Middlewares\Whoops::class)
     ->trough(TurboPancake\Middlewares\TralingSlashMiddleware::class)
     ->trough(TurboPancake\Middlewares\MethodDetectorMiddleware::class)
-    ->trough(TurboPancake\Middlewares\CsrfMiddleware::class)
+    ->trough(ArcHive\CsrfMiddleware::class)
     ->trough(TurboPancake\Middlewares\RouterMiddleware::class)
     ->trough(TurboPancake\Middlewares\DispatcherMiddleware::class)
     ->trough(TurboPancake\Middlewares\NotFoundMiddleware::class)
