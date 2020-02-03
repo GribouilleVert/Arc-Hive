@@ -2,11 +2,29 @@
 namespace ArcHive\Api\Actions\Datas;
 
 use ArcHive\Api\Actions\ApiResponseAction;
+use ArcHive\Api\Database\Tables\ApiKeysTable;
+use ArcHive\Api\Database\Tables\ReportsTable;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class CreateDataAction extends ApiResponseAction {
+
+    /**
+     * @var ApiKeysTable
+     */
+    private $keysTable;
+
+    /**
+     * @var ReportsTable
+     */
+    private $reportsTable;
+
+    public function __construct(ApiKeysTable $keysTable, ReportsTable $reportsTable)
+    {
+        $this->keysTable = $keysTable;
+        $this->reportsTable = $reportsTable;
+    }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -15,7 +33,7 @@ class CreateDataAction extends ApiResponseAction {
 
         $key = $request->getQueryParams()['key'] ?? '';
 
-        if (true) {
+        if (!$this->keysTable->checkKey($key)) {
             $this->withStatus('error')
                 ->withMessage('Invalid key');
         } elseif (
@@ -29,7 +47,17 @@ class CreateDataAction extends ApiResponseAction {
             AND isset($data->dht->outdoor->temperature)
             AND isset($data->presence_sensor)
         ) {
+            $this->reportsTable->insert([
+                'device_name' => $this->keysTable->findBy('key', $key)[0]->device_name,
+                'someone_present' => (bool)$data->presence_sensor,
+                'inside_temperature' => (float)$data->dht->indoor->temperature,
+                'inside_humidity' => (float)$data->dht->indoor->humidity,
+                'outside_temperature' => (float)$data->dht->outdoor->temperature,
+                'outside_humidity' => (float)$data->dht->outdoor->humidity,
+            ]);
 
+            $this->withStatus('ok')
+                ->withMessage('Registered.');
         } else {
             $this->withStatus('error')
                 ->withMessage('Not well formatted json object');
