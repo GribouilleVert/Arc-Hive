@@ -1,0 +1,219 @@
+{% extends 'layout.twig' %}
+
+{% block title 'Tableau de bord' %}
+
+{% block topContent %}
+    <a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="{{ path('dashboard.home', {}, {download: true}) }}" target="_blank">
+        <i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Télécharger
+    </a>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-left-primary py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-uppercase text-primary font-weight-bold text-xs mb-1">
+                                <span>Température EXT</span></div>
+                            <div class="text-dark font-weight-bold h5 mb-0"><span>{{ lastReport.insideTemperature }}°C</span></div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-thermometer-half fa-2x text-gray-300"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-left-success py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-uppercase text-success font-weight-bold text-xs mb-1">
+                                <span>Température INT</span></div>
+                            <div class="text-dark font-weight-bold h5 mb-0"><span>{{ lastReport.outsideTemperature }}°C</span></div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-thermometer-half fa-2x text-gray-300"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-left-warning py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-uppercase text-warning font-weight-bold text-xs mb-1">
+                                <span>Humidité INT</span></div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>{{ lastReport.insideHumidity }}%</span></div>
+                                </div>
+                                <div class="col">
+                                    <div class="progress progress-sm">
+                                        <div class="progress-bar bg-warning" aria-valuenow="{{ lastReport.insideHumidity }}" aria-valuemin="0"
+                                             aria-valuemax="100" style="width: {{ lastReport.insideHumidity }}%;"><span class="sr-only">{{ lastReport.insideHumidity }}%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-tint fa-2x text-gray-300"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card border-left-danger py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col mr-2">
+                            <div class="text-uppercase text-danger font-weight-bold text-xs mb-1">
+                                <span>Humidité EXT</span></div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>{{ lastReport.outsideHumidity }}%</span></div>
+                                </div>
+                                <div class="col">
+                                    <div class="progress progress-sm">
+                                        <div class="progress-bar bg-danger" aria-valuenow="{{ lastReport.outsideHumidity }}" aria-valuemin="0"
+                                             aria-valuemax="100" style="width: {{ lastReport.outsideHumidity }}%;"><span class="sr-only">{{ lastReport.outsideHumidity }}%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto"><i class="fas fa-tint fa-2x text-gray-300"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-auto col-sm-12 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="text-primary font-weight-bold m-0">Températures</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="temperature-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto col-sm-12 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="text-primary font-weight-bold m-0">Humidité</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="humidity-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="application/javascript">
+        $(document).ready(function () {
+
+            const options = {
+                "maintainAspectRatio": false,
+                "legend": {"display": true},
+                "title": {},
+                "scales": {
+                    "xAxes": [{
+                        "gridLines": {
+                            "color": "rgb(234, 236, 244)",
+                            "zeroLineColor": "rgb(234, 236, 244)",
+                            "drawBorder": false,
+                            "drawTicks": false,
+                            "borderDash": ["2"],
+                            "zeroLineBorderDash": ["2"],
+                            "drawOnChartArea": false
+                        }, "ticks": {"fontColor": "#858796", "padding": 20}
+                    }],
+                    "yAxes": [{
+                        "gridLines": {
+                            "color": "rgb(234, 236, 244)",
+                            "zeroLineColor": "rgb(234, 236, 244)",
+                            "drawBorder": false,
+                            "drawTicks": false,
+                            "borderDash": ["2"],
+                            "zeroLineBorderDash": ["2"]
+                        }, "ticks": {"fontColor": "#858796", "padding": 20, "beginAtZero" : true}
+                    }]
+                }
+            };
+            const labels = [
+                {% for report in reports %}
+                "{{ report.date }}",
+                {% endfor %}
+            ];
+
+            const tmpEl = $('#temperature-chart');
+            tmpEl.chart = new Chart(tmpEl, {
+                "type": "line",
+                "data": {
+                    "labels": labels,
+                    "datasets": [{
+                        "label": "Température INT",
+                        "fill": 'start',
+                        "data": [
+                            {% for report in reports %}
+                                "{{ report.datas.inside_temperature }}",
+                            {% endfor %}
+                        ],
+                        "backgroundColor": "rgba(78, 115, 223, 0.1)",
+                        "borderColor": "rgba(78, 115, 223, 1)"
+                    },{
+                        "label": "Température EXT",
+                        "fill": 'start',
+                        "data": [
+                            {% for report in reports %}
+                            "{{ report.datas.outside_temperature }}",
+                            {% endfor %}
+                        ],
+                        "backgroundColor": "rgba(28, 200, 138, 0.15)",
+                        "borderColor": "rgba(28, 200, 138, 1)"
+                    }]
+                },
+                "options": options
+            });
+
+            const humEl = $('#humidity-chart');
+            humEl.chart = new Chart(humEl, {
+                "type": "line",
+                "data": {
+                    "labels": labels,
+                    "datasets": [{
+                        "label": "Humidité INT",
+                        "fill": 'start',
+                        "data": [
+                            {% for report in reports %}
+                                "{{ report.datas.inside_humidity }}",
+                            {% endfor %}
+                        ],
+                        "backgroundColor": "rgba(246, 194, 62, 0.1)",
+                        "borderColor": "rgba(246, 194, 62, 1)"
+                    },{
+                        "label": "Humidité EXT",
+                        "fill": 'start',
+                        "data": [
+                            {% for report in reports %}
+                            "{{ report.datas.outside_humidity }}",
+                            {% endfor %}
+                        ],
+                        "backgroundColor": "rgba(231, 74, 59, 0.1)",
+                        "borderColor": "rgba(231, 74, 59, 1)"
+                    }]
+                },
+                "options": options
+            });
+        });
+    </script>
+{% endblock %}

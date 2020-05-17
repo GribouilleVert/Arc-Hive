@@ -1,11 +1,13 @@
 <?php
-
 chdir(dirname(__DIR__));
+setlocale(LC_ALL, 'FR_fr');
 
 require 'vendor/autoload.php';
 
 $modules = [
-    ArcHive\Api\ApiModule::class
+    ArcHive\Api\ApiModule::class,
+    ArcHive\Session\SessionModule::class,
+    ArcHive\Dashboard\DashboardModule::class,
 ];
 
 $app = new TurboPancake\App('config/config.php', $modules);
